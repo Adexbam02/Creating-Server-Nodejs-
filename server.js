@@ -1,46 +1,70 @@
 const http = require("http");
 const fs = require("fs");
+const _ = require("lodash");
 
 const server = http.createServer((req, res) => {
-  console.log(req.url, req.method);
+  // lodash method
+  const num = _.random(0, 20);
+  console.log(num);
 
-  //set header content type
+  // lodash method
+  const greet = _.once(() => {
+    console.log("I Geet Boss");
+  });
+
+  greet();
+  greet();
+
+  // set header content type
   res.setHeader("Content-Type", "text/html");
 
+  // res.write('<p>hello, ninjas</p>');
+  // res.write('<p>hello again, ninjas</p>');
+  // res.end();
+
+  // send html file
+  // fs.readFile('./views/index.html', (err, data) => {
+  //   if (err) {
+  //     console.log(err);
+  //     res.end();
+  //   }
+  //   //res.write(data);
+  //   res.end(data);
+  // });
+
+  // routing
   let path = "./views/";
   switch (req.url) {
     case "/":
-      path += "server.html";
+      path += "index.html";
       res.statusCode = 200;
       break;
     case "/about":
       path += "about.html";
-    case "/about-me":
+      res.statusCode = 200;
+      break;
+    case "/about-us":
       res.statusCode = 301;
       res.setHeader("Location", "/about");
-      path += "about.html";
-    case "/que":
-      path += "que.html";
-      res.statusCode = 200;
+      res.end();
+      break;
     default:
       path += "404.html";
       res.statusCode = 404;
-      break;
   }
 
+  // send html
   fs.readFile(path, (err, data) => {
-    // err ? console.log(err) : res.write(read), res.end();
     if (err) {
       console.log(err);
       res.end();
-    } else {
-      //   res.write(data);
-      //another way of doing it is to pass the data to the "end()" method if it is a single data, but multiple data we can use "write()"
-      res.end(data);
     }
+    //res.write(data);
+    res.end(data);
   });
 });
 
-server.listen(5000, "localhost", () => {
-  console.log("Listening for request on the port");
+// localhost is the default value for 2nd argument
+server.listen(3000, "localhost", () => {
+  console.log("listening for requests on port 3000");
 });
