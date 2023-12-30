@@ -3,25 +3,31 @@ const express = require("express");
 //express app
 const app = express();
 
+// register view engine
+app.set("view engine", "ejs");
+
 //listen for requests
 app.listen(3300);
 
 app.get("/", (req, res) => {
   //   res.send("<p>Home</p>");
-  res.sendFile("./views/index.html", { root: __dirname });
+  const blogs = [
+    {title: 'Yoshi finds eggs', snippet: 'Lorem ipsum dolor sit amet consectur'},
+    {title: 'Mario finds eggs', snippet: 'Lorem ipsum dolor sit amet consectur'},
+    {title: 'How to finds eggs', snippet: 'Lorem ipsum dolor sit amet consectur'}
+  ]
+  res.render("index", {title: 'Home', blogs});
 });
 
 app.get("/about", (req, res) => {
-  //   res.send("<p>About</p>");
-  res.sendFile("./views/about.html", { root: __dirname });
+  res.render("about", {title: 'About'});
 });
 
-// redirects
-app.get("/about-us", (req, res) => {
-  res.redirect("/about");
+app.get("/blogs/create", (req, res) => {
+  res.render("create", {title: 'Create'});
 });
 
 //404 page
 app.use((req, res) => {
-  res.status(404).sendFile("./views/404.html", { root: __dirname });
+  res.status(404).render("404", {title: 'error'});
 });
